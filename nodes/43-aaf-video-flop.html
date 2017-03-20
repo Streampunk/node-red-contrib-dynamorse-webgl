@@ -1,0 +1,98 @@
+<!--
+  Copyright 2017 Streampunk Media Ltd.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/javascript">
+    RED.nodes.registerType('aaf-video-flop',{
+      category: 'valve',
+      color: '#A6BBCF',
+      defaults: {
+        name: { value : ""},
+        maxBuffer : { value : 10, validate : RED.validators.number() },
+        description : { value : "" },
+        device : { value : "", type : "device" }
+      },
+      inputs:1,
+      outputs:1,
+      icon: "valve.png",
+      label: function() {
+        return this.name || "aaf-video-flop";
+      }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="aaf-video-flop">
+  <!-- Common to all funnel nodes -->
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> name</label>
+    <input type="text" id="node-input-name" placeholder="name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-description"><i class="fa fa-info-circle"></i> description</label>
+    <input type="text" id="node-input-description" placeholder="source and flow description">
+  </div>
+  <div class="form-row">
+    <label for="node-input-device"><i class="fa fa-tablet"></i> device</label>
+    <input type="text" id="node-input-device">
+  </div>
+  <div class="form-row">
+    <label for="node-input-maxBuffer"><i class="fa fa-suitcase"></i> max buffer</label>
+    <input type="number" id="node-input-maxBuffer" placeholder="10" style="width: 100px">
+  </div>
+</script>
+
+<style>
+.param-table table, th, td {
+  vertical-align: top;
+  padding: 3px;
+}
+</style>
+
+<script type="text/x-red" data-help-name="aaf-video-flop">
+  <h1>Apply a video flop using a WebGL shader</h1>
+  <p>Applies a video flop effect to uncompressed grains, creating a new NMOS flow with the correct attributes. Will convert from YCbCr 420P grains if necessary</p>
+
+  <h3>Parameters</h3>
+  <div class="param-table">
+  <table>
+   <tr>
+    <th>parameter</th><th>description</th>
+   </tr>
+   <tr>
+    <td><i class="fa fa-tag" aria-hidden="true"></i> name</td>
+    <td>Name of the node. Also output source &amp; flow label.</td>
+   </tr>
+   <tr>
+    <td><i class="fa fa-info-circle"></i> description</td>
+    <td>Optional description of this NMOS output source and output flow.</td>
+   </tr>
+   <tr>
+    <td><i class="fa fa-tablet"></i> device</td>
+    <td>Select or create an NMOS device for this source and flow.</td>
+   </tr>
+   <tr>
+    <td><i class="fa fa-suitcase"></i> max buffer</td>
+    <td>Maximum number of grains to buffer before overflowing.</td>
+   </tr>
+  </table>
+  </div>
+
+  <p>Metadata from the source flow will be passed through to the new flow with
+  relevant modifications concerning the format.</p>
+
+  <h3>Maturity</h3>
+  <p>Implemented and partially tested. Awaiting automated testing -
+  <a href="https://github.com/Streampunk/dynamorse/issues/5">status</a>.
+</script>

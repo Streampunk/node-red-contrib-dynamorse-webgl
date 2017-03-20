@@ -1,0 +1,18 @@
+machine:
+  node:
+    version: 6.9.5
+
+dependencies:
+  post:
+    - npm install -g tap-xunit
+    - npm install -g node-red
+    - npm install -g pm2
+    - pm2 start /opt/circleci/nodejs/v6.9.5/bin/node-red
+    - |
+      curl -d '{"module": "node-red-contrib-dynamorse-core"}' -H 'Content-Type: application/json' 127.0.0.1:1880/nodes
+      curl -d '{"module": "node-red-contrib-dynamorse-webgl"}' -H 'Content-Type: application/json' 127.0.0.1:1880/nodes
+
+test:
+  override:
+    - mkdir $CIRCLE_TEST_REPORTS/xunit
+    - npm test | tap-xunit > $CIRCLE_TEST_REPORTS/xunit/results.xml
