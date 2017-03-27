@@ -22,6 +22,7 @@ function WebGLValve (RED, config) {
   redioactive.Valve.call(this, config);
   this.srcFlow = null;
   var dstFlow = null;
+  var webGLeffect = Object.create(effect);
 
   if (!this.context().global.get('updated'))
     return this.log('Waiting for global context updated.');
@@ -39,7 +40,7 @@ function WebGLValve (RED, config) {
 
   function processGrain(x, push, next) {
     var time = process.hrtime();
-    result = effect.process(x.buffers[0]);
+    result = webGLeffect.process(x.buffers[0]);
     var err = null;
     if (err) {
       push(err);
@@ -47,7 +48,7 @@ function WebGLValve (RED, config) {
       var diff = process.hrtime(time);
       console.log(`Process took ${(diff[0] * 1e9 + diff[1])/1e6} milliseconds`);
       push(null, new Grain(result, x.ptpSync, x.ptpOrigin,
-                            x.timecode, dstFlow.id, source.id, x.duration));
+                           x.timecode, dstFlow.id, source.id, x.duration));
     }
     next();
   }
@@ -65,11 +66,12 @@ function WebGLValve (RED, config) {
           this.srcFlow = f;
 
           var dstTags = JSON.parse(JSON.stringify(this.srcFlow.tags));
-          dstTags["sampling"] = [ "RGBA" ];
+          dstTags["packing"] = [ "RGBA8" ];
+          dstTags["sampling"] = [ "RGBA-4:4:4:4" ];
 
           var formattedDstTags = JSON.stringify(dstTags, null, 2);
           RED.comms.publish('debug', {
-            format: "YCbCr2RGB output flow tags:",
+            format: "WebGLValve output flow tags:",
             msg: formattedDstTags
           }, true);
 
@@ -80,11 +82,12 @@ function WebGLValve (RED, config) {
             push(`Unable to register source: ${err}`);
           });
           nodeAPI.putResource(dstFlow).then(() => {
-            var colorimetry = dstTags["colorimetry"][0];
-            effect.setup(
+            let sampling = this.srcFlow.tags["sampling"][0]||"YCbCr-4:2:0";
+            let colorimetry = this.srcFlow.tags["colorimetry"][0]||"BT709-2";
+            webGLeffect.setup(
               +dstTags["width"][0]||1920, 
               +dstTags["height"][0]||1080, 
-              colorimetry.slice(2,5)||"709", 
+              sampling, colorimetry,
               this.shader, this.properties);
             processGrain(x, push, next);
           }, err => {

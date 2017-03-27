@@ -57,10 +57,7 @@ function createElementTexture(gl, buffer, width, height, fmt) {
 }
 
 var webglProcess = {
-  init: function(gl, width, height, shader, properties) {
-    this.width = width;
-    this.height = height;
-
+  init: function(gl, shader, properties) {
     this.maxTextureUnits = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
     this.program = createShaderProgram(gl, shader.vertexShader, shader.fragmentShader);
 
@@ -91,8 +88,9 @@ var webglProcess = {
     let boundTextureUnits = 0;
     for (let inputName of shader.inputs) {
       this.inputTextureUnitMapping.push({
-        name:inputName, 
-        textureUnit:gl.TEXTURE0 + boundTextureUnits
+        name: inputName, 
+        textureUnit: gl.TEXTURE0 + boundTextureUnits,
+        location: gl.getUniformLocation(this.program, inputName)
       });
       boundTextureUnits += 1;
       if (boundTextureUnits > this.maxTextureUnits) {
@@ -156,9 +154,9 @@ var webglProcess = {
       let inputTexture = srcTextures[i];
       let textureUnit = this.inputTextureUnitMapping[i].textureUnit;
       let textureName = this.inputTextureUnitMapping[i].name;
+      let textureLocation = this.inputTextureUnitMapping[i].location;
 
       gl.activeTexture(textureUnit);
-      let textureLocation = gl.getUniformLocation(this.program, textureName);
       gl.uniform1i(textureLocation, textureOffset);
       textureOffset += 1;
       gl.bindTexture(gl.TEXTURE_2D, inputTexture);

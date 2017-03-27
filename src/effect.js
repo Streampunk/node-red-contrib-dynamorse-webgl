@@ -18,20 +18,23 @@ var convert = require('./convert.js');
 
 var effect = Object.create(webglProcess);
 
-effect.setup = function (width, height, srcSampling, shader, properties) {
-  this._gl = require('gl')(width, height, { preserveDrawingBuffer: true });
+effect.setup = function (width, height, srcSampling, srcColorimetry, shader, properties) {
+  this.width = width;
+  this.height = height;
+  this._gl = require('gl')(this.width, this.height, { preserveDrawingBuffer: true });
   let gl = this._gl;
 
   // set up for convert to rgb if required
-  convert.setup(gl, width, height, srcSampling);
+  this.convert = Object.create(convert);
+  this.convert.setup(gl, this.width, this.height, srcSampling, srcColorimetry);
 
-  this.init(gl, width, height, shader, properties);
+  this.init(gl, shader, properties);
 }
 
 effect.process = function (buf) {
   let gl = this._gl;
   let srcTextures = [];
-  srcTextures.push(convert.convert(gl, buf));
+  srcTextures.push(this.convert.convert(gl, buf));
   this.render (gl, srcTextures);
 
   this.time = process.hrtime();

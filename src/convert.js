@@ -65,19 +65,23 @@ function ycbcr2rgbMatrix(colourspace) {
 
 var convert = Object.create(webglProcess);
 
-convert.setup = function (gl, width, height, srcSampling) {
-  this.srcIsYCbCr = ('709' === srcSampling) || ('2020' === srcSampling) || ('601' === srcSampling);
+convert.setup = function (gl, width, height, srcSampling, srcColorimetry) {
+  this.width = width;
+  this.height = height;
+  this.sampling = srcSampling.slice(0, srcSampling.search('-'));
+  this.colorimetry = srcColorimetry.slice(2, srcColorimetry.search('-'));
+  this.srcIsYCbCr = ('YCbCr' === this.sampling);
   if (this.srcIsYCbCr) {
-    this.texture = createElementTexture(gl, null, width, height, gl.RGBA);
+    this.texture = createElementTexture(gl, null, this.width, this.height, gl.RGBA);
     this.framebuffer = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
     gl.bindTexture(gl.TEXTURE_2D, null);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-    let matrix = ycbcr2rgbMatrix(srcSampling);
+    let matrix = ycbcr2rgbMatrix(this.colorimetry);
     let properties = { colMatrix: matrix };
-    this.init(gl, width, height, ycbcr2rgb, properties);
+    this.init(gl, ycbcr2rgb, properties);
     let chrCoordLocation = gl.getAttribLocation(this.program, "a_chrCoord");
     gl.enableVertexAttribArray(chrCoordLocation);
     gl.vertexAttribPointer(chrCoordLocation, 2, gl.FLOAT, false, 0, 0);
@@ -110,7 +114,10 @@ convert.convert = function (gl, buf) {
     result = this.texture;
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   } else {
-    result = createElementTexture(gl, buf, this.width, this.height, gl.RGBA)
+    this.time = process.hrtime();
+    result = createElementTexture(gl, buf, this.width, this.height, gl.RGBA);
+    let diff = process.hrtime(this.time);
+    console.log(`Source upload took ${(diff[0] * 1e9 + diff[1])/1e6} milliseconds`);
   }
 
   return result;
