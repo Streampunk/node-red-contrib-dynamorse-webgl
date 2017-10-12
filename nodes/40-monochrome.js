@@ -13,10 +13,9 @@
   limitations under the License.
 */
 
-var util = require('util');
-var redioactive = require('node-red-contrib-dynamorse-core').Redioactive;
-var shader = require('../shaders/monochrome.js');
-var WebGLValve = require('./webglValve.js').WebGLValve;
+const util = require('util');
+const shader = require('../shaders/monochrome.js');
+const WebGLValve = require('./webglValve.js').WebGLValve;
 
 module.exports = function (RED) {
   function Monochrome (config) {
@@ -30,5 +29,5 @@ module.exports = function (RED) {
     };
   }
   util.inherits(Monochrome, WebGLValve);
-  RED.nodes.registerType("monochrome", Monochrome);
-}
+  RED.nodes.registerType('monochrome', Monochrome);
+};

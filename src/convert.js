@@ -24,41 +24,42 @@ function ycbcr2rgbMatrix(colourspace) {
   //   RGB is full range 0-255.
   var kR, kG, kB;
   switch (colourspace) {
-    default:
-    case '709':  // https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.709-6-201506-I!!PDF-E.pdf
-      kR = 0.2126;
-      kB = 0.0722;
-      break;
-    case '2020': // https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.2020-2-201510-I!!PDF-E.pdf
-      kR = 0.2627;
-      kB = 0.0593;
-      break;
-    case '601':  // https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.601-7-201103-I!!PDF-E.pdf
-      kR = 0.299;
-      kB = 0.114;
-      break;
+  default:
+  case '709':  // https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.709-6-201506-I!!PDF-E.pdf
+    kR = 0.2126;
+    kB = 0.0722;
+    break;
+  case '2020': // https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.2020-2-201510-I!!PDF-E.pdf
+    kR = 0.2627;
+    kB = 0.0593;
+    break;
+  case '601':  // https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.601-7-201103-I!!PDF-E.pdf
+    kR = 0.299;
+    kB = 0.114;
+    break;
   }
   kG = 1.0 - kR - kB;
 
-  var Yr = 1.0 * 255.0 / 219.0;
-  var Ur = 0.0;
-  var Vr = (1.0 - kR) * 255.0 / 112.0;
-  var Or = - (16.0 / 255.0 * Yr) - (128.0 / 255.0 * Ur) - (128.0 / 255.0 * Vr);
+  const Yr = 1.0 * 255.0 / 219.0;
+  const Ur = 0.0;
+  const Vr = (1.0 - kR) * 255.0 / 112.0;
+  const Or = - (16.0 / 255.0 * Yr) - (128.0 / 255.0 * Ur) - (128.0 / 255.0 * Vr);
 
-  var Yg = 1.0 * 255.0 / 219.0;
-  var Ug = -(1.0 - kB) * kB / kG * 255.0 / 112.0;
-  var Vg = -(1.0 - kR) * kR / kG * 255.0 / 112.0;
-  var Og = - (16.0 / 255.0 * Yg) - (128.0 / 255.0 * Ug) - (128.0 / 255.0 * Vg);
+  const Yg = 1.0 * 255.0 / 219.0;
+  const Ug = -(1.0 - kB) * kB / kG * 255.0 / 112.0;
+  const Vg = -(1.0 - kR) * kR / kG * 255.0 / 112.0;
+  const Og = - (16.0 / 255.0 * Yg) - (128.0 / 255.0 * Ug) - (128.0 / 255.0 * Vg);
 
-  var Yb = 1.0 * 255.0 / 219.0;
-  var Ub = (1.0 - kB) * 255.0 / 112.0;
-  var Vb = 0.0;
-  var Ob = - (16.0 / 255.0 * Yb) - (128.0 / 255.0 * Ub) - (128.0 / 255.0 * Vb);
+  const Yb = 1.0 * 255.0 / 219.0;
+  const Ub = (1.0 - kB) * 255.0 / 112.0;
+  const Vb = 0.0;
+  const Ob = - (16.0 / 255.0 * Yb) - (128.0 / 255.0 * Ub) - (128.0 / 255.0 * Vb);
 
-  var matrix = [Yr, Ur, Vr, Or,
-                Yg, Ug, Vg, Og,
-                Yb, Ub, Vb, Ob,
-                0.0, 0.0, 0.0, 1.0];
+  const matrix = [
+    Yr, Ur, Vr, Or,
+    Yg, Ug, Vg, Og,
+    Yb, Ub, Vb, Ob,
+    0.0, 0.0, 0.0, 1.0];
   
   return matrix;
 }
@@ -82,11 +83,11 @@ convert.setup = function (gl, width, height, srcSampling, srcColorimetry) {
     let matrix = ycbcr2rgbMatrix(this.colorimetry);
     let properties = { colMatrix: matrix };
     this.init(gl, ycbcr2rgb, properties);
-    let chrCoordLocation = gl.getAttribLocation(this.program, "a_chrCoord");
+    let chrCoordLocation = gl.getAttribLocation(this.program, 'a_chrCoord');
     gl.enableVertexAttribArray(chrCoordLocation);
     gl.vertexAttribPointer(chrCoordLocation, 2, gl.FLOAT, false, 0, 0);
   }
-}
+};
 
 convert.convert = function (gl, buf) {
   let result = null;
@@ -121,6 +122,6 @@ convert.convert = function (gl, buf) {
   }
 
   return result;
-}
+};
 
 module.exports = convert;

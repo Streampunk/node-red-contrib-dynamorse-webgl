@@ -20,7 +20,7 @@ function compileShader(gl, shaderSource, shaderType) {
   gl.compileShader(shader);
   let success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
   if (!success) {
-    throw "could not compile shader:" + gl.getShaderInfoLog(shader);
+    throw 'could not compile shader:' + gl.getShaderInfoLog(shader);
   }
   return shader;
 }
@@ -35,7 +35,7 @@ function createShaderProgram(gl, vertexShaderSource, fragmentShaderSource){
   gl.linkProgram(program);
   
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)){
-    throw {"error":4,"msg":"Can't link shader program for track", toString:function(){return this.msg;}};
+    throw {'error':4,'msg':'Can\'t link shader program for track', toString:function(){return this.msg;}};
   }
   return program;
 }
@@ -43,7 +43,7 @@ function createShaderProgram(gl, vertexShaderSource, fragmentShaderSource){
 function createElementTexture(gl, buffer, width, height, fmt) {
   let texture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
   // Set the parameters so we can render any size image.
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -65,7 +65,7 @@ var webglProcess = {
     for (let propertyName in shader.properties) {
       let propertyValue = shader.properties[propertyName].value;
       //if an array then shallow copy it
-      if (Object.prototype.toString.call(propertyValue) === "[object Array]") {
+      if (Object.prototype.toString.call(propertyValue) === '[object Array]') {
         propertyValue = shader.properties[propertyName].value.slice();
       }
       let propertyType = shader.properties[propertyName].type;
@@ -78,7 +78,7 @@ var webglProcess = {
 
     // find the locations of the properties in the compiled shader
     for (let propertyName in this.properties) {
-      if (this.properties[propertyName].type === "uniform") {
+      if (this.properties[propertyName].type === 'uniform') {
         this.properties[propertyName].location = gl.getUniformLocation(this.program, propertyName);
       }
     }
@@ -94,13 +94,13 @@ var webglProcess = {
       });
       boundTextureUnits += 1;
       if (boundTextureUnits > this.maxTextureUnits) {
-        throw "Trying to bind more than available texture units to shader";
+        throw 'Trying to bind more than available texture units to shader';
       }
     }
 
     let buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    let positionLocation = gl.getAttribLocation(this.program, "a_position");
+    let positionLocation = gl.getAttribLocation(this.program, 'a_position');
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
@@ -114,7 +114,7 @@ var webglProcess = {
         0.0, 1.0,
         0.0, 0.0]),
       gl.STATIC_DRAW);
-    let texCoordLocation = gl.getAttribLocation(this.program, "a_texCoord");
+    let texCoordLocation = gl.getAttribLocation(this.program, 'a_texCoord');
     gl.enableVertexAttribArray(texCoordLocation);
     gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
   },
@@ -127,12 +127,12 @@ var webglProcess = {
       let propertyValue = this.properties[propertyName].value;
       let propertyType = this.properties[propertyName].type;
       let propertyLocation = this.properties[propertyName].location;
-      if (propertyType !== "uniform") continue;
+      if (propertyType !== 'uniform') continue;
 
-      if (typeof propertyValue === "number") {
+      if (typeof propertyValue === 'number') {
         gl.uniform1f(propertyLocation, propertyValue);
       }
-      else if (Object.prototype.toString.call(propertyValue) === "[object Array]") {
+      else if (Object.prototype.toString.call(propertyValue) === '[object Array]') {
         if (propertyValue.length === 1) {
           gl.uniform1fv(propertyLocation, propertyValue);
         } else if(propertyValue.length === 2) {
@@ -144,7 +144,7 @@ var webglProcess = {
         } else if(propertyValue.length === 16) {
           gl.uniformMatrix4fv(propertyLocation, false, propertyValue);
         } else {
-          console.debug("Shader parameter", propertyName, "is too long an array:", propertyValue);
+          console.debug('Shader parameter', propertyName, 'is too long an array:', propertyValue);
         }
       }
     }
@@ -153,7 +153,6 @@ var webglProcess = {
     for (var i = 0; i < this.inputTextureUnitMapping.length; i++) {
       let inputTexture = srcTextures[i];
       let textureUnit = this.inputTextureUnitMapping[i].textureUnit;
-      let textureName = this.inputTextureUnitMapping[i].name;
       let textureLocation = this.inputTextureUnitMapping[i].location;
 
       gl.activeTexture(textureUnit);
@@ -169,4 +168,4 @@ var webglProcess = {
 module.exports = {
   webglProcess: webglProcess,
   createElementTexture: createElementTexture
-}
+};

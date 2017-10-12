@@ -13,10 +13,9 @@
   limitations under the License.
 */
 
-var util = require('util');
-var redioactive = require('node-red-contrib-dynamorse-core').Redioactive;
-var shader = require('../shaders/horizontalBlur.js');
-var WebGLValve = require('./webglValve.js').WebGLValve;
+const util = require('util');
+const shader = require('../shaders/horizontalBlur.js');
+const WebGLValve = require('./webglValve.js').WebGLValve;
 
 module.exports = function (RED) {
   function HorizontalBlur (config) {
@@ -29,5 +28,5 @@ module.exports = function (RED) {
     };
   }
   util.inherits(HorizontalBlur, WebGLValve);
-  RED.nodes.registerType("horizontal-blur", HorizontalBlur);
-}
+  RED.nodes.registerType('horizontal-blur', HorizontalBlur);
+};

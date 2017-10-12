@@ -13,10 +13,9 @@
   limitations under the License.
 */
 
-var util = require('util');
-var redioactive = require('node-red-contrib-dynamorse-core').Redioactive;
-var shader = require('../shaders/verticalBlur.js');
-var WebGLValve = require('./webglValve.js').WebGLValve;
+const util = require('util');
+const shader = require('../shaders/verticalBlur.js');
+const WebGLValve = require('./webglValve.js').WebGLValve;
 
 module.exports = function (RED) {
   function VerticalBlur (config) {
@@ -29,5 +28,5 @@ module.exports = function (RED) {
     };
   }
   util.inherits(VerticalBlur, WebGLValve);
-  RED.nodes.registerType("vertical-blur", VerticalBlur);
-}
+  RED.nodes.registerType('vertical-blur', VerticalBlur);
+};

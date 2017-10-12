@@ -13,10 +13,9 @@
   limitations under the License.
 */
 
-var util = require('util');
-var redioactive = require('node-red-contrib-dynamorse-core').Redioactive;
-var shader = require('../shaders/aaf_video_position.js');
-var WebGLValve = require('./webglValve.js').WebGLValve;
+const util = require('util');
+const shader = require('../shaders/aaf_video_position.js');
+const WebGLValve = require('./webglValve.js').WebGLValve;
 
 module.exports = function (RED) {
   function AafVideoPosition (config) {
@@ -30,5 +29,5 @@ module.exports = function (RED) {
     };
   }
   util.inherits(AafVideoPosition, WebGLValve);
-  RED.nodes.registerType("aaf-video-position", AafVideoPosition);
-}
+  RED.nodes.registerType('aaf-video-position', AafVideoPosition);
+};

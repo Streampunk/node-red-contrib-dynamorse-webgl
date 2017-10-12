@@ -13,10 +13,9 @@
   limitations under the License.
 */
 
-var util = require('util');
-var redioactive = require('node-red-contrib-dynamorse-core').Redioactive;
-var shader = require('../shaders/aaf_video_crop.js');
-var WebGLValve = require('./webglValve.js').WebGLValve;
+const util = require('util');
+const shader = require('../shaders/aaf_video_crop.js');
+const WebGLValve = require('./webglValve.js').WebGLValve;
 
 module.exports = function (RED) {
   function AafVideoCrop (config) {
@@ -32,5 +31,5 @@ module.exports = function (RED) {
     };
   }
   util.inherits(AafVideoCrop, WebGLValve);
-  RED.nodes.registerType("aaf-video-crop", AafVideoCrop);
-}
+  RED.nodes.registerType('aaf-video-crop', AafVideoCrop);
+};

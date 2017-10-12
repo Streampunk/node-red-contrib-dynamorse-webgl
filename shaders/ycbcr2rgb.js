@@ -15,9 +15,9 @@
 'use strict';
 
 let ycbcr2rgb = {
-  "title":"ycbcr2rgb",
-  "description": "Convert YCbCr 420P source to RGB",
-  "vertexShader" : "\
+  'title':'ycbcr2rgb',
+  'description': 'Convert YCbCr 420P source to RGB',
+  'vertexShader' : '\
     attribute vec2 a_position;\
     attribute vec2 a_texCoord;\
     attribute vec2 a_chrCoord;\
@@ -27,8 +27,8 @@ let ycbcr2rgb = {
       gl_Position = vec4(vec2(2.0,2.0)*a_position-vec2(1.0, 1.0), 0.0, 1.0);\
       v_texCoord = a_texCoord;\
       v_chrCoord = a_chrCoord;\
-    }",
-  "fragmentShader" : "\
+    }',
+  'fragmentShader' : '\
     precision mediump float;\
     uniform sampler2D u_imageY;\
     uniform sampler2D u_imageCb;\
@@ -41,11 +41,11 @@ let ycbcr2rgb = {
       float fCb = texture2D(u_imageCb, v_chrCoord).x;\
       float fCr = texture2D(u_imageCr, v_chrCoord).x;\
       gl_FragColor = vec4(fY, fCb, fCr, 1.0) * colMatrix;\
-    }",
-  "properties" : {
-    "colMatrix":{"type":"uniform", "value":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]}
+    }',
+  'properties' : {
+    'colMatrix':{'type':'uniform', 'value':[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]}
   },
-  "inputs" : ["u_imageY", "u_imageCb", "u_imageCr"]
+  'inputs' : ['u_imageY', 'u_imageCb', 'u_imageCr']
 };
 
 module.exports = ycbcr2rgb;

@@ -29,7 +29,7 @@ effect.setup = function (width, height, srcSampling, srcColorimetry, shader, pro
   this.convert.setup(gl, this.width, this.height, srcSampling, srcColorimetry);
 
   this.init(gl, shader, properties);
-}
+};
 
 effect.process = function (buf) {
   let gl = this._gl;
@@ -49,6 +49,6 @@ effect.process = function (buf) {
   // process.stdout.write('\n');
 
   return Buffer.from(pixels.buffer);
-}
+};
 
 module.exports = effect;

@@ -13,10 +13,9 @@
   limitations under the License.
 */
 
-var util = require('util');
-var redioactive = require('node-red-contrib-dynamorse-core').Redioactive;
-var shader = require('../shaders/aaf_video_flip.js');
-var WebGLValve = require('./webglValve.js').WebGLValve;
+const util = require('util');
+const shader = require('../shaders/aaf_video_flip.js');
+const WebGLValve = require('./webglValve.js').WebGLValve;
 
 module.exports = function (RED) {
   function AafVideoFlip (config) {
@@ -27,5 +26,5 @@ module.exports = function (RED) {
     this.properties = {};
   }
   util.inherits(AafVideoFlip, WebGLValve);
-  RED.nodes.registerType("aaf-video-flip", AafVideoFlip);
-}
+  RED.nodes.registerType('aaf-video-flip', AafVideoFlip);
+};
