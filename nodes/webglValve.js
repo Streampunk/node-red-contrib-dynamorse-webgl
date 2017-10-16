@@ -57,8 +57,8 @@ function WebGLValve (RED, config) {
           }
           srcTags = cable[0].video[0].tags;
           const dstTags = JSON.parse(JSON.stringify(srcTags));
-          dstTags['packing'] = [ 'RGBA8' ];
-          dstTags['sampling'] = [ 'RGBA-4:4:4:4' ];
+          dstTags.packing = 'RGBA8';
+          dstTags.sampling = 'RGBA-4:4:4:4';
           const formattedDstTags = JSON.stringify(dstTags, null, 2);
           RED.comms.publish('debug', {
             format: `${config.type} output flow tags:`,
@@ -69,11 +69,11 @@ function WebGLValve (RED, config) {
           flowID = this.flowID();
           sourceID = this.sourceID();
 
-          const sampling = srcTags['sampling'][0]||'YCbCr-4:2:0';
-          const colorimetry = srcTags['colorimetry'][0]||'BT709-2';
+          const sampling = srcTags.sampling||'YCbCr-4:2:0';
+          const colorimetry = srcTags.colorimetry||'BT709-2';
           webGLeffect.setup(
-            +dstTags['width'][0]||1920, 
-            +dstTags['height'][0]||1080, 
+            dstTags.width||1920, 
+            dstTags.height||1080, 
             sampling, colorimetry,
             this.shader, this.properties);
         });
