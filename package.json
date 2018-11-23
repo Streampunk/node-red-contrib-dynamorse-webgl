@@ -9,7 +9,7 @@
     "webgl"
   ],
   "dependencies": {
-    "gl": "^4.1.1"
+    "gl": "^4.0.4"
   },
   "devDependencies": {
     "dynamorse-test": "^0.2.1",
