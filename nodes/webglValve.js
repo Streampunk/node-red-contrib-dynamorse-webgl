@@ -90,7 +90,7 @@ function WebGLValve (RED, config) {
     }
   });
 
-  this.on('close', this.close);
+  this.on('close', () => {});
 }
 util.inherits(WebGLValve, redioactive.Valve);
 
